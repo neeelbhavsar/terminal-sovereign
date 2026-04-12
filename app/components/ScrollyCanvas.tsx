@@ -32,10 +32,11 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
         const imgArray: HTMLImageElement[] = [];
         const timeouts: NodeJS.Timeout[] = [];
         const retryAttempts: Record<number, number> = {};
+        let autoStartTimer: NodeJS.Timeout | null = null;
 
         const loadImage = (i: number, attempt: number = 0) => {
             const img = new Image();
-            img.src = `${IMAGES_DIR}frame_${i.toString().padStart(3, "0")}.png?t=${Date.now()}`;
+            img.src = `${IMAGES_DIR}frame_${i.toString().padStart(3, "0")}.png`;
 
             // Set timeout for each image
             const timeout = setTimeout(() => {
@@ -51,14 +52,24 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
 
             const checkLoadComplete = () => {
                 const totalProcessed = loadedCount + failedCount;
-                setLoadProgress(Math.round((totalProcessed / FRAME_COUNT) * 100));
+                const progressPercent = Math.round((totalProcessed / FRAME_COUNT) * 100);
+                setLoadProgress(progressPercent);
 
-                if (totalProcessed === FRAME_COUNT) {
-                    if (failedCount > 0) {
-                        setError(`${failedCount} frame(s) failed to load. Canvas may not animate smoothly.`);
-                        setAllLoaded(true); // Allow viewing despite errors
-                    } else {
+                // Auto-start after 50% loaded OR after 10 seconds
+                if (!autoStartTimer && (progressPercent >= 50 || totalProcessed >= FRAME_COUNT * 0.5)) {
+                    autoStartTimer = setTimeout(() => {
                         setAllLoaded(true);
+                        console.log(`Auto-starting animation with ${loadedCount}/${FRAME_COUNT} frames loaded`);
+                    }, 2000);
+                }
+
+                // Mark as complete when all frames processed
+                if (totalProcessed === FRAME_COUNT) {
+                    if (autoStartTimer) clearTimeout(autoStartTimer);
+                    setAllLoaded(true);
+                    if (failedCount > 0) {
+                        setError(`${failedCount} frame(s) loaded with delay. Animation may stutter.`);
+                    } else {
                         setError(null);
                     }
                 }
@@ -101,6 +112,7 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
         // Cleanup timeouts on unmount
         return () => {
             timeouts.forEach(timeout => clearTimeout(timeout));
+            if (autoStartTimer) clearTimeout(autoStartTimer);
         };
     }, []);
 
@@ -115,7 +127,19 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const img = images[index];
+        const clampedIndex = Math.max(0, Math.min(index, FRAME_COUNT - 1));
+        let img = images[clampedIndex];
+
+        // If current frame not loaded, find nearest loaded frame
+        if (!img) {
+            for (let i = clampedIndex; i >= 0; i--) {
+                if (images[i]) {
+                    img = images[i];
+                    break;
+                }
+            }
+        }
+
         if (!img) return;
 
         const width = window.innerWidth;
@@ -137,7 +161,6 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
     }, [images]);
 
     useMotionValueEvent(frameIndex, "change", (latest) => {
-        if (!allLoaded) return;
         const index = Math.round(latest);
         renderFrame(index);
     });
