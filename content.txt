@@ -1,0 +1,84 @@
+# 
+
+Please create a portfolio in Next.js with a unique design, effects, and additional features of your choice. Also correct and enhance the content I've provided below.
+
+About Me
+
+I'm an experienced Node.js Developer with over 4 years of hands-on experience building scalable, high-performance backend systems. I specialize in designing robust RESTful APIs using Node.js and Express, implementing secure authentication and authorization flows, and optimizing databases for performance and reliability.
+
+I've worked extensively with both relational and NoSQL databases—including MySQL, PostgreSQL, MongoDB, and Neo4j—focusing on efficient data modeling, query optimization, and maintaining data consistency across polyglot database architectures. My experience also includes integrating third-party APIs and external services while ensuring system stability and data integrity.
+
+I care deeply about clean architecture, well-structured codebases, and building systems that are maintainable, secure, and ready to scale as products and teams grow. I enjoy tackling complex backend challenges, improving system performance, and turning business requirements into production-ready solutions that create real impact.
+
+Skills
+
+JavaScript, TypeScript, Express.js, Nest.js, MongoDB, PostgreSQL, MySQL, Redis, Redis Bull, [Socket.IO](http://socket.io/), Sequelize, Git, AWS, PayPal, Stripe, Twilio, Postmark, SES
+
+Soft Skills
+
+Team Leadership, Client Communication, Project Management, Complex Problem Solving
+
+Work Experience
+
+Artoon Solution Pvt Ltd — April 2021 to Present — Node.js Developer
+
+- Developed and maintained high-performance backend applications using Node.js and Express.js, optimizing for low latency and efficient request handling.
+- Designed and implemented secure, scalable REST APIs for web and mobile platforms, ensuring smooth frontend integration and reliable data transactions.
+- Implemented real-time communication features using WebSocket and [Socket.IO](http://socket.io/), enhancing user engagement and live data updates.
+- Actively participated in code reviews, debugging, and refactoring to improve code quality and enforce consistent coding standards.
+- Applied TypeScript best practices to build scalable, readable codebases, reducing runtime errors and improving long-term maintainability.
+
+Projects
+
+Braganza — January 2026 to Present
+
+- Engineered the backend for a car rental platform, enabling users to discover, book, and rent vehicles through a secure, scalable system.
+- Integrated Booqable to manage vehicle inventory, pricing, and reservations, with all bookings orchestrated through a custom backend workflow.
+- Designed and implemented a crypto payment flow using a custom wallet service to securely process rental transactions.
+- Delivered real-time booking status updates using WebSockets, improving transparency and user experience during reservations.
+- Built the system using Node.js, Express.js, Prisma, PostgreSQL, and Redis, with secure secret management and transactional emails via AWS services.
+
+Streamerdap — July 2025 to December 2025
+
+- Built a web-based live streaming platform allowing creators to stream content directly from OBS Browser through the application.
+- Implemented a multi-role system supporting streamers, managers, and brand managers, with role-specific access and workflows.
+- Enabled managers to create campaigns and onboard streamers, managing streaming activities and campaign execution within the platform.
+- Designed and developed a complete PayPal-based payout system, calculating streamer earnings based on view counts and streaming duration.
+- Implemented subscription and billing flows using PayPal, including invoice generation, payment processing, and transaction tracking for managers.
+- Developed a wallet system allowing users to add funds via PayPal for campaign creation and payouts.
+- Improved overall platform performance by optimizing MySQL queries and refining database access patterns.
+
+Jolt — March 2025 to July 2025
+
+- Built a **dual-purpose platform** that functions as both a content management system (CMS) and a public film streaming interface.
+- Designed a **scalable backend architecture** to handle film uploads, metadata management, and content publishing workflows.
+- Delivered smooth film discovery and streaming experiences with efficient content delivery and structured media handling.
+- Optimized performance and responsiveness across devices, reducing load times and enhancing user experience.
+- Maintained clean system design and code structure to ensure long-term scalability.
+
+SpingR    September 2024 - February 2025
+- Designed and built a **secure user management system** with registration, authentication, and profile management.
+- Created a platform for users to **design, share, and manage digital business cards**, streamlining professional networking.
+- Implemented **graph-based search with Neo4j** to enable targeted networking and relationship discovery.
+- Built a **real-time chat system** using WebSockets for seamless in-platform communication.
+- Designed the platform as a **digital contact book** to improve connection management and networking efficiency.
+
+iMentor     August 2023 - June 2024
+- Built a **CMS-driven platform** with multi-role admin support, enabling educational institutions to efficiently manage events, announcements, and user workflows.
+- Designed an **automated mentor–mentee matching system** using structured questionnaire responses to optimize compatibility and engagement.
+- Developed course management and progress tracking features, empowering mentors to assign learning paths and monitor mentee performance.
+- Enabled **real-time communication** between mentors and mentees using [Socket.IO](http://Socket.IO) for seamless interaction.
+- Maintained scalability and code quality through structured backend architecture and optimized database operations.
+
+Diamond Connect      June 2021 - July 2023
+- Built a **cross-platform application (Web, iOS, Android)** for managing baseball events, tournaments, and game coordination.
+- Developed backend systems that allow users to **create events, schedule matches, and track tournament progress** through structured workflows.
+- Designed an **automated game scheduling engine** that generates optimized match fixtures and streamlines coordination.
+- Integrated **real-time score updates** using third-party APIs and [Socket.IO](http://Socket.IO) to deliver live game data across all platforms.
+- Ensured scalable architecture and seamless cross-platform performance while integrating **Stripe** for secure payment processing.
+
+# 
+
+# 
+
+#
