@@ -63,6 +63,7 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
                 if (!autoStartTimer && criticalLoadedCount >= CRITICAL_FRAMES * 0.8) {
                     autoStartTimer = setTimeout(() => {
                         setAllLoaded(true);
+                        setError(null);
                         console.log(`✓ Animation starting with ${criticalLoadedCount}/${CRITICAL_FRAMES} critical frames loaded`);
                     }, 500);
                 }
@@ -71,7 +72,10 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
                 if (totalLoadedCount + failedCount === FRAME_COUNT) {
                     if (autoStartTimer) clearTimeout(autoStartTimer);
                     if (failedCount > 0) {
+                        setError(`${failedCount} frame(s) loaded with delay`);
                         console.warn(`✓ Animation complete: ${totalLoadedCount} frames loaded, ${failedCount} failed`);
+                    } else {
+                        setError(null);
                     }
                 }
             };
