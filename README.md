@@ -92,8 +92,8 @@ The portfolio itself demonstrates these skills through:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/neeelbhavsar/neel-portfolio.git
-   cd neel-portfolio
+   git clone https://github.com/neeelbhavsar/terminal-sovereign.git
+   cd terminal-sovereign
    ```
 
 2. **Install dependencies**
@@ -133,7 +133,7 @@ npm start
 ## 📋 Project Structure
 
 ```
-neel-portfolio/
+terminal-sovereign/
 ├── app/
 │   ├── api/
 │   │   └── contact/

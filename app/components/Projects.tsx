@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform, MotionValue, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useInView, useMotionValueEvent, MotionValue, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 
 /* eslint-disable @next/next/no-img-element */
@@ -22,12 +22,54 @@ type Project = {
 
 const projects: Project[] = [
   {
+    title: "signalDeck",
+    version: "v1.2.0",
+    pid: "PID_5201",
+    status: "RUNNING",
+    tagline: "Webhook Monitoring & Real-time Debugging Dashboard",
+    description: "Lightweight webhook monitoring solution designed for developers to capture, inspect, and debug incoming webhooks from third-party services in real-time. Provides an intuitive dashboard to view request payloads, headers, timestamps, and response codes without manual logging or complex infrastructure setup.",
+    image: "/images/SignalDeck.png",
+    logLines: [
+      "[11:45:01] ✓ Webhook receiver: INITIALIZED",
+      "[11:45:02] ✓ Socket.IO connection: ACTIVE",
+      "[11:45:03] ✓ MongoDB payload storage: READY",
+      "[11:45:04] ✓ Real-time dashboard: STREAMING",
+      "[11:45:05] ✓ Request inspector: ONLINE",
+      "[11:45:06] ✓ Webhook queue: PROCESSING",
+    ],
+    bullets: ["Real-time webhook capture and inspection dashboard with live updates", "View complete request payloads, headers, and response metadata in structured format", "MongoDB-backed storage for historical webhook logs with filtering and search", "Socket.io integration for instant notifications when new webhooks arrive", "Lightweight npm package for easy installation and integration into dev environment", "Support for multiple endpoints and webhook sources with organized categorization"],
+    tags: ["Express", "MongoDB", "Socket.io", "Next.js", "Tailwind CSS", "Framer Motion", "Radix UI"],
+    accentColor: "#00f0ff",
+    period: "Nov 2025 – Present",
+  },
+  {
+    title: "Docify",
+    version: "v1.5.0",
+    pid: "PID_5890",
+    status: "RUNNING",
+    tagline: "Developer Credentials Vault with Encryption",
+    description: "Secure credentials management vault built for developers to store sensitive information including API keys, tokens, passwords, and environment-specific secrets. Features military-grade AES encryption for data protection, environment-wise organization, PDF export capabilities, and a clean interface for credential management across multiple projects and deployments.",
+    image: "/images/docify.png",
+    logLines: [
+      "[15:30:01] ✓ Encryption engine: INITIALIZED",
+      "[15:30:02] ✓ JWT authentication: ACTIVE",
+      "[15:30:03] ✓ MongoDB vault: CONNECTED",
+      "[15:30:04] ✓ PDF generator: READY",
+      "[15:30:05] ✓ AES-256 encryption: ENABLED",
+      "[15:30:06] ✓ Credential sync: ONLINE",
+    ],
+    bullets: ["AES-256 encryption for all sensitive credentials stored in MongoDB", "Environment-wise credential organization: Development, Staging, Production, Testing", "Secure credential management interface with add, edit, delete, and view operations", "PDF export feature to download encrypted credentials with environment-wise sections", "JWT-based authentication with session management and access control", "Quick search and filtering across multiple projects and credential types"],
+    tags: ["Next.js", "Express.js", "MongoDB", "JWT", "Tailwind CSS", "AES Encryption"],
+    accentColor: "#00ff41",
+    period: "Oct 2025 – Present",
+  },
+  {
     title: "Braganza",
     version: "v2.1.0",
     pid: "PID_4821",
     status: "RUNNING",
     tagline: "Car Rental Platform with Crypto Payments",
-    description: "A full-stack car rental platform enabling users to discover, book, and rent vehicles through a secure, scalable system.",
+    description: "Enterprise-grade car rental platform integrating Booqable inventory system with thirdWeb SDK for secure crypto payment processing. Features real-time booking synchronization, dynamic pricing engine, and automated vehicle lifecycle management with integrated crypto wallet support.",
     image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=900&auto=format&fit=crop",
     logLines: [
       "[09:23:01] ✓ Car rental platform initializing...",
@@ -37,8 +79,8 @@ const projects: Project[] = [
       "[09:23:05] ✓ AWS SES mailer: CONNECTED",
       "[09:23:06] ✓ Redis cache: READY — 0ms latency",
     ],
-    bullets: ["Integrated Booqable for vehicle inventory", "Designed custom crypto payment flow", "Real-time booking via WebSockets", "AWS SES transactional emails"],
-    tags: ["Node.js", "Express", "Prisma", "PostgreSQL", "Redis", "AWS", "WebSockets"],
+    bullets: ["Booqable API integration for real-time inventory sync & availability", "thirdWeb SDK integration for crypto payment processing with multi-currency support", "Real-time booking & reservation via WebSockets with live status updates", "AWS SES transactional emails with booking confirmations & receipts", "Redis caching layer for sub-100ms inventory queries", "Role-based access control for admin, customer, and partner tiers"],
+    tags: ["Node.js", "Express", "TypeScript", "Prisma", "PostgreSQL", "Redis", "AWS", "WebSockets", "Stripe"],
     accentColor: "#00f0ff",
     period: "Jan 2026 – Present",
   },
@@ -48,7 +90,7 @@ const projects: Project[] = [
     pid: "PID_3917",
     status: "RUNNING",
     tagline: "Live Streaming Platform with OBS Integration",
-    description: "A web-based live streaming platform empowering creators to stream directly from OBS Browser.",
+    description: "Full-featured live streaming platform enabling content creators to broadcast directly through OBS with integrated monetization. Supports multi-role hierarchies, view-based analytics, automated payout calculations, and subscription billing with real-time stream monitoring and audience engagement tools.",
     image: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=900&auto=format&fit=crop",
     logLines: [
       "[14:11:07] ✓ OBS browser source: CONNECTED",
@@ -58,8 +100,8 @@ const projects: Project[] = [
       "[14:11:11] ✓ Subscription billing: INITIALIZED",
       "[14:11:12] ✓ Wallet service: READY",
     ],
-    bullets: ["Multi-role system: streamers, managers, brand managers", "PayPal payout based on view counts & duration", "Subscription and billing flows with invoice generation", "Wallet system for campaign creation"],
-    tags: ["Node.js", "MySQL", "PayPal API", "Socket.IO", "Sequelize", "OBS"],
+    bullets: ["OBS browser source integration for seamless streaming workflow", "Multi-role system: streamers, managers, brand managers with granular permissions", "PayPal payout engine calculating earnings based on view counts, duration, and engagement metrics", "Subscription & recurring billing with automated invoice generation and tax compliance", "Real-time wallet system for creator earnings tracking and campaign fund management", "Analytics dashboard with viewer metrics, engagement rates, and earnings visualization"],
+    tags: ["Node.js", "Express", "TypeScript", "React", "MySQL", "Sequelize", "PayPal API", "Socket.IO", "OBS", "Stripe"],
     accentColor: "#00ff41",
     period: "Jul 2025 – Dec 2025",
   },
@@ -69,7 +111,7 @@ const projects: Project[] = [
     pid: "PID_3310",
     status: "DEPLOYED",
     tagline: "Dual-purpose CMS & Film Streaming Interface",
-    description: "A dual-purpose platform serving as both a CMS and a public film streaming interface.",
+    description: "Hybrid content management and streaming platform combining powerful admin CMS with high-performance public streaming interface. Manages video lifecycle from upload through storage and delivery with CloudFlare CDN optimization, quality-based streaming, and comprehensive media metadata indexing with advanced search capabilities.",
     image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=900&auto=format&fit=crop",
     logLines: [
       "[10:42:01] ✓ CMS admin module: LOADED",
@@ -78,8 +120,8 @@ const projects: Project[] = [
       "[10:42:04] ✓ Role-based access: ENFORCED",
       "[10:42:05] ✓ Media metadata API: READY",
     ],
-    bullets: ["Scalable backend for film uploads and metadata", "Content publishing workflows with role-based access", "Optimized performance across devices", "Efficient CDN-backed media handling"],
-    tags: ["Node.js", "CMS", "Video Streaming", "PostgreSQL", "Scalable Architecture"],
+    bullets: ["Admin CMS with drag-and-drop content publishing and workflow approval system", "Video upload pipeline with quality-based streaming for optimal performance across devices", "CloudFlare CDN integration for global edge caching, DDoS protection, and load balancing", "Role-based access control: editors, publishers, admins with granular permissions", "Full-text search with media metadata indexing and filtering by genres, cast, ratings", "Responsive streaming UI with resume-playback, subtitles, quality selection, and viewer analytics"],
+    tags: ["Node.js", "Express", "TypeScript", "React", "PostgreSQL", "Redis", "CloudFlare"],
     accentColor: "#00f0ff",
     period: "Mar 2025 – Jul 2025",
   },
@@ -89,7 +131,7 @@ const projects: Project[] = [
     pid: "PID_2788",
     status: "STANDBY",
     tagline: "Digital Business Card Platform with Graph Search",
-    description: "A platform to design, share, and manage digital business cards with graph-based networking.",
+    description: "Next-gen professional networking platform leveraging graph database technology to create intelligent business card networks. Enables users to design beautiful digital cards, discover professional connections through graph-based recommendations, and communicate via real-time messaging with secure authentication and smart connection insights.",
     image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=900&auto=format&fit=crop",
     logLines: [
       "[08:00:01] ✓ Neo4j graph DB: CONNECTED",
@@ -98,8 +140,8 @@ const projects: Project[] = [
       "[08:00:04] ✓ JWT auth system: ACTIVE",
       "[08:00:05] ✓ Contact book service: INDEXED",
     ],
-    bullets: ["Graph-based search with Neo4j for targeted networking", "Real-time chat system using WebSockets", "Secure user management with registration and auth", "Digital contact book for connection management"],
-    tags: ["Node.js", "Neo4j", "WebSockets", "MongoDB", "JWT"],
+    bullets: ["Neo4j graph database for intelligent connection recommendations based on skills & interests", "Digital card designer with customizable templates, branding, and QR code generation", "Real-time messaging system via WebSockets with typing indicators and read receipts", "Advanced search & filtering: find professionals by skills, industry, location, experience level", "JWT-based secure authentication with comprehensive two-factor authentication support", "Indexed contact book with tagging, categories, and relationship strength metrics"],
+    tags: ["Node.js", "Express", "TypeScript", "React", "Neo4j", "MongoDB", "WebSockets", "JWT"],
     accentColor: "#00ff41",
     period: "Sep 2024 – Feb 2025",
   },
@@ -109,7 +151,7 @@ const projects: Project[] = [
     pid: "PID_2201",
     status: "DEPLOYED",
     tagline: "Educational CMS with Automated Matching",
-    description: "A CMS-driven educational platform with multi-role admin support and automated mentor–mentee matching.",
+    description: "Enterprise educational platform empowering institutions with intelligent mentor-mentee pairing, comprehensive course management, and real-time collaboration tools. Features questionnaire-based matching logic, progress tracking, automated notifications, and multi-institutional admin controls for scalable education delivery across diverse learning institutions.",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=900&auto=format&fit=crop",
     logLines: [
       "[07:30:01] ✓ CMS admin panel: LOADED",
@@ -118,8 +160,8 @@ const projects: Project[] = [
       "[07:30:04] ✓ Socket.IO channels: OPEN",
       "[07:30:05] ✓ Questionnaire engine: READY",
     ],
-    bullets: ["Automated mentor-mentee matching via questionnaires", "Course management and progress tracking", "Real-time communication via Socket.IO", "Multi-role admin support for institutions"],
-    tags: ["Node.js", "Socket.IO", "MongoDB", "Algorithm", "CMS"],
+    bullets: ["Intelligent mentor-mentee matching using questionnaire-based profiling and compatibility scoring", "Comprehensive course management: curriculum design, lesson scheduling, resource management", "Real-time collaboration via Socket.IO: live sessions, messaging, file sharing", "Progress tracking: completion rates, engagement metrics, skill assessments, and learning outcomes", "Multi-institutional admin dashboard with user management, reporting, and compliance tracking", "Automated notifications for session reminders, milestones, and achievement badges"],
+    tags: ["Node.js", "Express", "TypeScript", "React", "MongoDB", "Socket.IO", "Redis"],
     accentColor: "#00f0ff",
     period: "Aug 2023 – Jun 2024",
   },
@@ -129,7 +171,7 @@ const projects: Project[] = [
     pid: "PID_1099",
     status: "DEPLOYED",
     tagline: "Baseball Event Management & Scheduling Engine",
-    description: "A cross-platform application for managing baseball tournaments with automated scheduling.",
+    description: "Comprehensive sports management platform for baseball tournaments and events. Provides intelligent automated scheduling with conflict resolution, real-time live scoring, team/player management, payment processing, and responsive web access for seamless tournament organization, fan engagement, and event analytics.",
     image: "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?q=80&w=900&auto=format&fit=crop",
     logLines: [
       "[06:00:01] ✓ Scheduling engine: OPTIMIZED",
@@ -138,8 +180,8 @@ const projects: Project[] = [
       "[06:00:04] ✓ Stripe payments: INITIALIZED",
       "[06:00:05] ✓ Cross-platform APIs: WEB | iOS | Android",
     ],
-    bullets: ["Automated game scheduling engine for optimized fixtures", "Real-time score updates via Socket.IO", "Cross-platform: Web, iOS, Android", "Stripe integration for payment processing"],
-    tags: ["Node.js", "Socket.IO", "Stripe", "MySQL", "Cross-platform"],
+    bullets: ["Intelligent scheduling engine with constraint solving for optimal fixture generation", "Live score updates via Socket.IO: real-time game status, stats, and leaderboards", "Team & player management: rosters, stats tracking, performance analytics", "Stripe payment integration for registration fees, tickets, and sponsorships", "Responsive web application with REST APIs for extensibility and third-party integrations", "Tournament dashboards: organizer views for management, spectator views for engagement and live updates"],
+    tags: ["Node.js", "Express", "TypeScript", "React", "MySQL", "Socket.IO", "Stripe", "REST API"],
     accentColor: "#00ff41",
     period: "Jun 2021 – Jul 2023",
   },
@@ -232,18 +274,31 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
 
 // ── Card ───────────────────────────────────────────────────────────────────
 const ProjectCard = ({
-  project, index, progress, range, targetScale, onOpen,
+  project, index, progress, range, targetScale, onOpen, isActive,
 }: {
-  project: Project; index: number; progress: MotionValue<number>; range: number[]; targetScale: number; onOpen: (p: Project) => void;
+  project: Project; index: number; progress: MotionValue<number>; range: number[]; targetScale: number; onOpen: (p: Project) => void; isActive: boolean;
 }) => {
-  const scale = useTransform(progress, range, [1, targetScale]);
+  const rawScale = useTransform(progress, range, [1, targetScale]);
+  const scale = useSpring(rawScale, { stiffness: 180, damping: 28 });
+  const opacity = useTransform(progress, range, [1, 0.6]);
+  const imageY = useTransform(progress, range, ["0%", "-8%"]);
+
+  const logRef = useRef<HTMLDivElement>(null);
+  const logInView = useInView(logRef, { once: true, margin: "-60px" });
+
   const statusColor = project.status === "RUNNING" ? "var(--green)" : project.status === "DEPLOYED" ? "var(--cyan)" : "#94a3b8";
 
   return (
     <div className="min-h-screen md:h-screen flex items-center justify-center sticky top-0 pointer-events-none py-4 md:py-0">
       <motion.div
-        style={{ scale, top: `calc(-5vh + ${index * 26}px)` }}
+        style={{ scale, opacity, top: `calc(-5vh + ${index * 26}px)` }}
         className="relative w-full max-w-5xl pointer-events-auto origin-top terminal-window mx-2 md:mx-4"
+        animate={{
+          boxShadow: isActive
+            ? "0 0 0 1px #00f0ff, 0 0 20px rgba(0,240,255,0.15)"
+            : "0 0 0 1px rgba(0,240,255,0.35), 0 0 0px rgba(0,240,255,0)",
+        }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
         {/* Title bar */}
         <div className="terminal-titlebar justify-between flex-wrap gap-y-1">
@@ -268,11 +323,11 @@ const ProjectCard = ({
         <div className="flex flex-col md:flex-row">
           {/* Image panel */}
           <div className="relative w-full md:w-56 flex-shrink-0 overflow-hidden" style={{ minHeight: 140 }}>
-            <img
+            <motion.img
               src={project.image}
               alt={project.title}
               className="w-full h-full object-cover"
-              style={{ minHeight: 140, maxHeight: 180 }}
+              style={{ minHeight: 140, maxHeight: 180, y: imageY }}
             />
             {/* Neon cyan overlay */}
             <div className="absolute inset-0 pointer-events-none" style={{
@@ -291,11 +346,20 @@ const ProjectCard = ({
           </div>
 
           {/* Log feed - hidden on mobile to save space */}
-          <div className="hidden md:block flex-1 p-5 border-r border-l" style={{ borderColor: "var(--border)" }}>
+          <div ref={logRef} className="hidden md:block flex-1 p-5 border-r border-l" style={{ borderColor: "var(--border)" }}>
             <p className="font-mono-ts text-[10px] tracking-widest uppercase text-slate-500 mb-3">// deployment_log</p>
             <div className="space-y-1">
               {project.logLines.map((line, i) => (
-                <p key={i} className="font-mono-ts text-[11px]" style={{ color: "var(--green)" }}>{line}</p>
+                <motion.p
+                  key={i}
+                  className="font-mono-ts text-[11px]"
+                  style={{ color: "var(--green)" }}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={logInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.35, delay: i * 0.12, ease: "easeOut" }}
+                >
+                  {line}
+                </motion.p>
               ))}
             </div>
           </div>
@@ -330,6 +394,12 @@ export default function Projects() {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({ target: container, offset: ["start start", "end end"] });
   const [selected, setSelected] = useState<Project | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const idx = Math.min(projects.length - 1, Math.floor(latest * projects.length));
+    setActiveIndex(idx);
+  });
 
   return (
     <section id="projects" ref={container} className="bg-[#050505] relative">
@@ -364,9 +434,30 @@ export default function Projects() {
               range={[i / projects.length, 1]}
               targetScale={targetScale}
               onOpen={setSelected}
+              isActive={activeIndex === i}
             />
           );
         })}
+      </div>
+
+      {/* Scroll progress tracker */}
+      <div
+        className="sticky top-6 z-20 flex justify-end pr-4 md:pr-8 pointer-events-none"
+        style={{ marginTop: "-2rem" }}
+      >
+        <div
+          className="font-mono-ts text-[10px] tracking-widest"
+          style={{
+            color: "var(--cyan)",
+            opacity: 0.7,
+            transition: "opacity 0.3s",
+          }}
+        >
+          [{String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}]{" "}
+          <span style={{ color: "var(--green)" }}>
+            {projects[activeIndex].title.toUpperCase()}
+          </span>
+        </div>
       </div>
 
       <AnimatePresence>
