@@ -3,20 +3,6 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "env": {
-    "GMAIL_USER": {
-      "description": "Gmail address for sending emails",
-      "required": true
-    },
-    "GMAIL_APP_PASSWORD": {
-      "description": "Gmail app-specific password (16 characters)",
-      "required": true
-    },
-    "NEXT_PUBLIC_BASE_URL": {
-      "description": "Your portfolio URL (e.g., https://yourdomain.com)",
-      "required": false
-    }
-  },
   "git": {
     "silent": false
   },
