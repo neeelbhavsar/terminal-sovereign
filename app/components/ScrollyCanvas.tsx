@@ -5,8 +5,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const FRAME_COUNT = 120;
 const IMAGES_DIR = "/sequence/";
-const IMAGE_LOAD_TIMEOUT = 60000; // 60 seconds timeout per image (increased for Vercel)
-const MAX_RETRIES = 3; // Retry failed frames
+const CRITICAL_FRAMES = 30; // Load first 30 frames immediately (25% of animation)
+const IMAGE_LOAD_TIMEOUT = 40000; // 40 seconds timeout per image
+const MAX_RETRIES = 2; // Retry failed frames
 
 interface ScrollyCanvasProps {
     scrollContainerRef: React.RefObject<HTMLElement>;
@@ -27,7 +28,8 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
     const frameIndex = useTransform(scrollYProgress, [0, 1], [0, FRAME_COUNT - 1]);
 
     useEffect(() => {
-        let loadedCount = 0;
+        let criticalLoadedCount = 0;
+        let totalLoadedCount = 0;
         let failedCount = 0;
         const imgArray: HTMLImageElement[] = [];
         const timeouts: NodeJS.Timeout[] = [];
@@ -38,61 +40,61 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
             const img = new Image();
             img.src = `${IMAGES_DIR}frame_${i.toString().padStart(3, "0")}.png`;
 
+            // Shorter timeout for critical frames, longer for others
+            const timeout = i < CRITICAL_FRAMES ? 20000 : IMAGE_LOAD_TIMEOUT;
+
             // Set timeout for each image
-            const timeout = setTimeout(() => {
+            const timeoutId = setTimeout(() => {
                 if (!img.complete && (retryAttempts[i] ?? 0) < MAX_RETRIES) {
                     retryAttempts[i] = (retryAttempts[i] ?? 0) + 1;
-                    console.warn(`Image ${i} timeout, retrying... (attempt ${retryAttempts[i]})`);
+                    console.warn(`Frame ${i} timeout, retrying... (attempt ${retryAttempts[i]})`);
                     loadImage(i, retryAttempts[i]);
                 } else if (!img.complete) {
                     failedCount++;
                     checkLoadComplete();
                 }
-            }, IMAGE_LOAD_TIMEOUT);
+            }, timeout);
 
             const checkLoadComplete = () => {
-                const totalProcessed = loadedCount + failedCount;
-                const progressPercent = Math.round((totalProcessed / FRAME_COUNT) * 100);
+                const progressPercent = Math.round((totalLoadedCount / FRAME_COUNT) * 100);
                 setLoadProgress(progressPercent);
 
-                // Auto-start after 50% loaded OR after 10 seconds
-                if (!autoStartTimer && (progressPercent >= 50 || totalProcessed >= FRAME_COUNT * 0.5)) {
+                // Auto-start once critical frames (0-30) are loaded
+                if (!autoStartTimer && criticalLoadedCount >= CRITICAL_FRAMES * 0.8) {
                     autoStartTimer = setTimeout(() => {
                         setAllLoaded(true);
-                        console.log(`Auto-starting animation with ${loadedCount}/${FRAME_COUNT} frames loaded`);
-                    }, 2000);
+                        console.log(`✓ Animation starting with ${criticalLoadedCount}/${CRITICAL_FRAMES} critical frames loaded`);
+                    }, 500);
                 }
 
-                // Mark as complete when all frames processed
-                if (totalProcessed === FRAME_COUNT) {
+                // Continue loading rest in background
+                if (totalLoadedCount + failedCount === FRAME_COUNT) {
                     if (autoStartTimer) clearTimeout(autoStartTimer);
-                    setAllLoaded(true);
                     if (failedCount > 0) {
-                        setError(`${failedCount} frame(s) loaded with delay. Animation may stutter.`);
-                    } else {
-                        setError(null);
+                        console.warn(`✓ Animation complete: ${totalLoadedCount} frames loaded, ${failedCount} failed`);
                     }
                 }
             };
 
             img.onload = () => {
-                clearTimeout(timeout);
+                clearTimeout(timeoutId);
                 if (attempt === 0 || !imgArray[i]) {
                     imgArray[i] = img;
                 }
-                loadedCount++;
+                if (i < CRITICAL_FRAMES) criticalLoadedCount++;
+                totalLoadedCount++;
                 checkLoadComplete();
             };
 
             img.onerror = () => {
-                clearTimeout(timeout);
+                clearTimeout(timeoutId);
                 if ((retryAttempts[i] ?? 0) < MAX_RETRIES) {
                     retryAttempts[i] = (retryAttempts[i] ?? 0) + 1;
-                    console.warn(`Image ${i} error, retrying... (attempt ${retryAttempts[i]})`);
+                    console.warn(`Frame ${i} error, retrying... (attempt ${retryAttempts[i]})`);
                     loadImage(i, retryAttempts[i]);
                 } else {
                     failedCount++;
-                    console.error(`Image ${i} failed after ${MAX_RETRIES} retries`);
+                    console.error(`Frame ${i} failed after ${MAX_RETRIES} retries`);
                     checkLoadComplete();
                 }
             };
@@ -100,18 +102,29 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
             if (attempt === 0) {
                 imgArray[i] = img;
             }
-            timeouts.push(timeout);
+            timeouts.push(timeoutId);
         };
 
-        for (let i = 0; i < FRAME_COUNT; i++) {
+        // Load critical frames immediately (0-30)
+        console.log(`📦 Loading ${CRITICAL_FRAMES} critical frames...`);
+        for (let i = 0; i < CRITICAL_FRAMES; i++) {
             loadImage(i);
         }
+
+        // Load remaining frames in background after 1 second
+        const backgroundLoadTimer = setTimeout(() => {
+            console.log(`📦 Loading remaining ${FRAME_COUNT - CRITICAL_FRAMES} frames...`);
+            for (let i = CRITICAL_FRAMES; i < FRAME_COUNT; i++) {
+                loadImage(i);
+            }
+        }, 1000);
 
         setImages(imgArray);
 
         // Cleanup timeouts on unmount
         return () => {
             timeouts.forEach(timeout => clearTimeout(timeout));
+            clearTimeout(backgroundLoadTimer);
             if (autoStartTimer) clearTimeout(autoStartTimer);
         };
     }, []);
