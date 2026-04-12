@@ -5,7 +5,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const FRAME_COUNT = 120;
 const IMAGES_DIR = "/sequence/";
-const IMAGE_LOAD_TIMEOUT = 30000; // 30 seconds timeout per image
+const IMAGE_LOAD_TIMEOUT = 60000; // 60 seconds timeout per image (increased for Vercel)
+const MAX_RETRIES = 3; // Retry failed frames
 
 interface ScrollyCanvasProps {
     scrollContainerRef: React.RefObject<HTMLElement>;
@@ -30,16 +31,20 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
         let failedCount = 0;
         const imgArray: HTMLImageElement[] = [];
         const timeouts: NodeJS.Timeout[] = [];
+        const retryAttempts: Record<number, number> = {};
 
-        for (let i = 0; i < FRAME_COUNT; i++) {
+        const loadImage = (i: number, attempt: number = 0) => {
             const img = new Image();
-            img.src = `${IMAGES_DIR}frame_${i.toString().padStart(3, "0")}.png`;
+            img.src = `${IMAGES_DIR}frame_${i.toString().padStart(3, "0")}.png?t=${Date.now()}`;
 
             // Set timeout for each image
             const timeout = setTimeout(() => {
-                if (!img.complete) {
+                if (!img.complete && (retryAttempts[i] ?? 0) < MAX_RETRIES) {
+                    retryAttempts[i] = (retryAttempts[i] ?? 0) + 1;
+                    console.warn(`Image ${i} timeout, retrying... (attempt ${retryAttempts[i]})`);
+                    loadImage(i, retryAttempts[i]);
+                } else if (!img.complete) {
                     failedCount++;
-                    console.warn(`Image ${i} failed to load within timeout`);
                     checkLoadComplete();
                 }
             }, IMAGE_LOAD_TIMEOUT);
@@ -50,8 +55,8 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
 
                 if (totalProcessed === FRAME_COUNT) {
                     if (failedCount > 0) {
-                        setError(`Failed to load ${failedCount} frame(s). Retrying...`);
-                        // Optionally attempt reload
+                        setError(`${failedCount} frame(s) failed to load. Canvas may not animate smoothly.`);
+                        setAllLoaded(true); // Allow viewing despite errors
                     } else {
                         setAllLoaded(true);
                         setError(null);
@@ -61,18 +66,34 @@ export default function ScrollyCanvas({ scrollContainerRef }: ScrollyCanvasProps
 
             img.onload = () => {
                 clearTimeout(timeout);
+                if (attempt === 0 || !imgArray[i]) {
+                    imgArray[i] = img;
+                }
                 loadedCount++;
                 checkLoadComplete();
             };
 
             img.onerror = () => {
                 clearTimeout(timeout);
-                failedCount++;
-                console.error(`Error loading frame ${i}`);
-                checkLoadComplete();
+                if ((retryAttempts[i] ?? 0) < MAX_RETRIES) {
+                    retryAttempts[i] = (retryAttempts[i] ?? 0) + 1;
+                    console.warn(`Image ${i} error, retrying... (attempt ${retryAttempts[i]})`);
+                    loadImage(i, retryAttempts[i]);
+                } else {
+                    failedCount++;
+                    console.error(`Image ${i} failed after ${MAX_RETRIES} retries`);
+                    checkLoadComplete();
+                }
             };
 
-            imgArray.push(img);
+            if (attempt === 0) {
+                imgArray[i] = img;
+            }
+            timeouts.push(timeout);
+        };
+
+        for (let i = 0; i < FRAME_COUNT; i++) {
+            loadImage(i);
         }
 
         setImages(imgArray);
