@@ -1,0 +1,65 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "env": {
+    "GMAIL_USER": {
+      "description": "Gmail address for sending emails",
+      "required": true
+    },
+    "GMAIL_APP_PASSWORD": {
+      "description": "Gmail app-specific password (16 characters)",
+      "required": true
+    },
+    "NEXT_PUBLIC_BASE_URL": {
+      "description": "Your portfolio URL (e.g., https://yourdomain.com)",
+      "required": false
+    }
+  },
+  "git": {
+    "silent": false
+  },
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/images/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/robots.txt",
+      "destination": "/api/robots"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/github",
+      "destination": "https://github.com/neeelbhavsar/terminal-sovereign",
+      "permanent": false
+    },
+    {
+      "source": "/linkedin",
+      "destination": "https://linkedin.com/in/neeelbhavsar",
+      "permanent": false
+    }
+  ]
+}

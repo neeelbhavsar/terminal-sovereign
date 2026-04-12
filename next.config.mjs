@@ -7,6 +7,10 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'images.unsplash.com',
             },
+            {
+                protocol: 'https',
+                hostname: '**.vercel.app',
+            },
         ],
         // Enable AVIF format for modern browsers (better compression)
         formats: ['image/avif', 'image/webp'],
@@ -20,6 +24,15 @@ const nextConfig = {
 
     // Trailing slashes for consistent URLs
     trailingSlash: false,
+
+    // Optimize for production
+    productionBrowserSourceMaps: false,
+
+    // SWR cache configuration
+    onDemandEntries: {
+        maxInactiveAge: 60 * 60 * 1000,
+        pagesBufferLength: 5,
+    },
 };
 
 export default nextConfig;
