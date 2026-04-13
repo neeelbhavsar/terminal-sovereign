@@ -18,6 +18,7 @@ type Project = {
   pid: string;
   period: string;
   bullets: string[];
+  projectType: "client" | "personal";
 };
 
 const projects: Project[] = [
@@ -41,6 +42,7 @@ const projects: Project[] = [
     tags: ["Express", "MongoDB", "Socket.io", "Next.js", "Tailwind CSS", "Framer Motion", "Radix UI"],
     accentColor: "#00f0ff",
     period: "Nov 2025 – Present",
+    projectType: "personal",
   },
   {
     title: "Docify",
@@ -62,6 +64,7 @@ const projects: Project[] = [
     tags: ["Next.js", "Express.js", "MongoDB", "JWT", "Tailwind CSS", "AES Encryption"],
     accentColor: "#00ff41",
     period: "Oct 2025 – Present",
+    projectType: "personal",
   },
   {
     title: "Braganza",
@@ -83,6 +86,7 @@ const projects: Project[] = [
     tags: ["Node.js", "Express", "TypeScript", "Prisma", "PostgreSQL", "Redis", "AWS", "WebSockets", "Stripe"],
     accentColor: "#00f0ff",
     period: "Jan 2026 – Present",
+    projectType: "client",
   },
   {
     title: "Streamerdap",
@@ -104,6 +108,7 @@ const projects: Project[] = [
     tags: ["Node.js", "Express", "TypeScript", "React", "MySQL", "Sequelize", "PayPal API", "Socket.IO", "OBS", "Stripe"],
     accentColor: "#00ff41",
     period: "Jul 2025 – Dec 2025",
+    projectType: "client",
   },
   {
     title: "Jolt",
@@ -124,6 +129,7 @@ const projects: Project[] = [
     tags: ["Node.js", "Express", "TypeScript", "React", "PostgreSQL", "Redis", "CloudFlare"],
     accentColor: "#00f0ff",
     period: "Mar 2025 – Jul 2025",
+    projectType: "client",
   },
   {
     title: "SpingR",
@@ -144,6 +150,7 @@ const projects: Project[] = [
     tags: ["Node.js", "Express", "TypeScript", "React", "Neo4j", "MongoDB", "WebSockets", "JWT"],
     accentColor: "#00ff41",
     period: "Sep 2024 – Feb 2025",
+    projectType: "client",
   },
   {
     title: "iMentor",
@@ -164,6 +171,7 @@ const projects: Project[] = [
     tags: ["Node.js", "Express", "TypeScript", "React", "MongoDB", "Socket.IO", "Redis"],
     accentColor: "#00f0ff",
     period: "Aug 2023 – Jun 2024",
+    projectType: "client",
   },
   {
     title: "Diamond Connect",
@@ -184,6 +192,7 @@ const projects: Project[] = [
     tags: ["Node.js", "Express", "TypeScript", "React", "MySQL", "Socket.IO", "Stripe", "REST API"],
     accentColor: "#00ff41",
     period: "Jun 2021 – Jul 2023",
+    projectType: "client",
   },
 ];
 
@@ -310,8 +319,15 @@ const ProjectCard = ({
               {project.pid} | {project.title.toLowerCase()} {project.version}
             </span>
           </div>
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             <span className="font-mono-ts text-[9px] md:text-[10px] text-slate-500 hidden sm:inline">{project.period}</span>
+            <span className="font-mono-ts text-[9px] px-2 py-0.5 rounded" style={{
+              background: project.projectType === "client" ? "rgba(0,240,255,0.1)" : "rgba(0,255,65,0.1)",
+              border: `1px solid ${project.projectType === "client" ? "rgba(0,240,255,0.3)" : "rgba(0,255,65,0.3)"}`,
+              color: project.projectType === "client" ? "var(--cyan)" : "var(--green)"
+            }}>
+              {project.projectType === "client" ? "👤 Client" : "⭐ Personal"}
+            </span>
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full status-pulse" style={{ background: statusColor }} />
               <span className="font-mono-ts text-[9px] md:text-[10px]" style={{ color: statusColor }}>{project.status}</span>

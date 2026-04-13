@@ -12,13 +12,13 @@ const neofetchLines = [
   { label: "Shell",      value: "Express.js + NestJS" },
   { label: "Terminal",   value: "Neel Bhavsar" },
   { label: "CPU",        value: "Problem-Solver @ 100%" },
-  { label: "Memory",     value: "6 Shipped Projects" },
+  { label: "Memory",     value: "8 Total Projects (6 Client + 2 Personal)" },
   { label: "GPU",        value: "Real-time WebSocket" },
 ];
 
 const stats = [
   { value: "4+",   label: "Years_Experience" },
-  { value: "6+",   label: "Projects_Shipped" },
+  { value: "8",    label: "Projects_Delivered" },
   { value: "20+",  label: "Technologies" },
   { value: "99%",  label: "Backend_Focus" },
 ];
